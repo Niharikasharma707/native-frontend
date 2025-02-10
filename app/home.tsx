@@ -1,9 +1,21 @@
 import { View, Text, Button, Alert } from 'react-native';
 import { supabase } from '../supabase';
 import { useRouter } from 'expo-router';
+import { useEffect } from 'react';
 
 export default function HomeScreen() {
   const router = useRouter();
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        router.replace('/login');
+      }
+    };
+    
+    checkSession();
+  }, []);
 
   const handleLogout = async () => {
     try {
