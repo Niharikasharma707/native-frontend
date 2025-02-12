@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { supabase } from '../supabase';
 import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function AuthScreen() {
   const [isLogin, setIsLogin] = useState(true);
@@ -22,16 +23,16 @@ export default function AuthScreen() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-useEffect(() => {
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        router.replace('/home');
-      }
-    };
+// useEffect(() => {
+//     const checkSession = async () => {
+//       const { data: { session } } = await supabase.auth.getSession();
+//       if (session) {
+//         router.replace('/home');
+//       }
+//     };
     
-    checkSession();
-  }, []);
+//     checkSession();
+//   }, []);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -39,6 +40,12 @@ useEffect(() => {
       return;
     }
     setLoading(true);
+
+    await AsyncStorage.multiRemove([
+        'supabase-auth-token',
+        'user-session',
+        'access-token'
+      ]);
     
     const { data, error } = await supabase.auth.signInWithPassword({ 
       email, 
