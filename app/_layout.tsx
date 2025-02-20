@@ -107,7 +107,7 @@ export default function RootLayout() {
         />
         {/* <Stack.Screen name="homee" options={{ headerShown: false }} /> */}
       </Stack>
-      {session ? <Redirect href="/home" /> : <Redirect href="/login" />}
+      {/* {session ? <Redirect href="/home" /> : <Redirect href="/login" />} */}
     </QueryClientProvider>
   );
 }
