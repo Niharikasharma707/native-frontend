@@ -98,6 +98,13 @@ export default function RootLayout() {
             gestureEnabled: false 
           }}
         />
+         <Stack.Screen 
+          name="groups"
+          options={{ 
+            headerShown: false,
+            gestureEnabled: false 
+          }}
+        />
         {/* <Stack.Screen name="homee" options={{ headerShown: false }} /> */}
       </Stack>
       {session ? <Redirect href="/home" /> : <Redirect href="/login" />}

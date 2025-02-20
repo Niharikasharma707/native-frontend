@@ -1,9 +1,10 @@
-import { View, Text, Button, Alert, Platform } from 'react-native';
-import { supabase } from '../../supabase';
+import { View, Text, Button, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { supabase } from '../../supabase';
+import { useMutation } from '@tanstack/react-query';
+import { logoutFromBackend  } from '../api/Auth';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -22,8 +23,8 @@ export default function HomeScreen() {
 
   const clearSessionData = async () => {
     try {
-      await AsyncStorage.removeItem('supabase-auth-token');
       await AsyncStorage.multiRemove([
+        'supabase-auth-token',
         'user-session',
         'access-token',
       ]);
@@ -32,51 +33,23 @@ export default function HomeScreen() {
     }
   };
 
-  const handleLogout = async () => {
-    try {
-      const session = await supabase.auth.getSession();
-      const token = session?.data?.session?.access_token;
-
-      if (!token) {
-        throw new Error('No active session found');
-      }
-
-      try {
-        const response = await fetch("http://localhost:3000/auth/logout", {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-
-        const data = await response.json();
-        if (data.error) {
-          console.warn('Backend logout warning:', data.error);
-        }
-      } catch (error) {
-        console.warn('Backend logout failed:', error);
-      }
-
+  const mutation = useMutation({
+    mutationFn: logoutFromBackend,
+    onSuccess: async () => {
       await clearSessionData();
-
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
-
       router.replace('/login');
-    } catch (error) {
-      if (error instanceof Error) {
-        Alert.alert('Error', error.message);
-      } else {
-        Alert.alert('Error', 'An unexpected error occurred');
-      }
-    }
-  };
+    },
+    onError: (error: unknown) => {
+      Alert.alert('Error', error instanceof Error ? error.message : 'An unexpected error occurred');
+    },
+  });
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text style={{ fontSize: 24, marginBottom: 20 }}>Welcome to Home!</Text>
-      <Button title="Logout" onPress={handleLogout} />
+      <Button title="Logout" onPress={() => mutation.mutate()} />
     </View>
   );
 }
