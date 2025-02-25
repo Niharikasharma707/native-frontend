@@ -55,7 +55,7 @@ export default function HomeScreen() {
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Text style={{ fontSize: 24, marginBottom: 20 }}>Welcome to Home!</Text>
       <Button title="Logout" onPress={() => mutation.mutate()} />
-      <Button title="My Groups" onPress={() => router.push("/groups")} />
+      {/* <Button title="My Groups" onPress={() => router.push("/groups")} /> */}
     </View>
   );
 }

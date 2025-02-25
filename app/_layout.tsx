@@ -50,7 +50,6 @@ export default function RootLayout() {
     checkSession();
 
     const { data: listener } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('Auth state changed:', event);
       if (session) {
         await AsyncStorage.setItem('user-session', JSON.stringify(session));
       } else {
@@ -91,23 +90,23 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="login" options={{ headerShown: false }} />
-        <Stack.Screen 
+        {/* <Stack.Screen 
           name="home"
           options={{ 
             headerShown: false,
             gestureEnabled: false 
           }}
-        />
-         <Stack.Screen 
+        /> */}
+         {/* <Stack.Screen 
           name="groups"
           options={{ 
             headerShown: false,
             gestureEnabled: false 
           }}
-        />
+        /> */}
         {/* <Stack.Screen name="homee" options={{ headerShown: false }} /> */}
       </Stack>
-      {/* {session ? <Redirect href="/home" /> : <Redirect href="/login" />} */}
+      {session ? <Redirect href="/home" /> : <Redirect href="/login" />}
     </QueryClientProvider>
   );
 }
