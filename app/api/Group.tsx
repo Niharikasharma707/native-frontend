@@ -117,3 +117,31 @@ export const deleteGroup = async (groupId: string) => {
     throw error;
   }
 };
+
+// app/api/Group.ts
+export const getGroupDetails = async (groupId: string) => {
+  try {
+    const session = await supabase.auth.getSession();
+    const token = session.data.session?.access_token;
+
+    if (!token) {
+      throw new Error('No authentication token found');
+    }
+
+    const response = await fetch(`${API_URL}/groups/${groupId}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error('Get group details error:', error);
+    throw error;
+  }
+};

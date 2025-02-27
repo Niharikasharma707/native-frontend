@@ -13,6 +13,8 @@ import {
 } from 'react-native';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { createGroup, getUserGroups, leaveGroup, deleteGroup } from '../api/Group';
+import { useRouter } from 'expo-router';
+
 
 interface GroupItem {
     id: string;
@@ -25,6 +27,8 @@ export default function GroupsScreen() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newGroupName, setNewGroupName] = useState('');
   const queryClient = useQueryClient();
+
+  const router = useRouter();
 
 //   Fetch groups
   const { data: groups, isLoading } = useQuery({
@@ -74,31 +78,31 @@ export default function GroupsScreen() {
     createGroupMutation.mutate(newGroupName);
   };
 
-  const handleGroupAction = (groupId: string, isOwner: boolean) => {
-    Alert.alert(
-      'Group Action',
-      'What would you like to do?',
-      [
-        {
-          text: isOwner ? 'Delete Group' : 'Leave Group',
-          style: 'destructive',
-          onPress: () => {
-            if (isOwner) {
-              deleteGroupMutation.mutate(groupId);
-            } else {
-              leaveGroupMutation.mutate(groupId);
-            }
-          }
-        },
-        { text: 'Cancel', style: 'cancel' }
-      ]
-    );
-  };
+  // const handleGroupAction = (groupId: string, isOwner: boolean) => {
+  //   Alert.alert(
+  //     'Group Action',
+  //     'What would you like to do?',
+  //     [
+  //       {
+  //         text: isOwner ? 'Delete Group' : 'Leave Group',
+  //         style: 'destructive',
+  //         onPress: () => {
+  //           if (isOwner) {
+  //             deleteGroupMutation.mutate(groupId);
+  //           } else {
+  //             leaveGroupMutation.mutate(groupId);
+  //           }
+  //         }
+  //       },
+  //       { text: 'Cancel', style: 'cancel' }
+  //     ]
+  //   );
+  // };
 
   const renderGroup = ({ item }: { item: GroupItem }) => (
     <TouchableOpacity
       style={styles.groupCard}
-      onPress={() => handleGroupAction(item.id, item.owner_id === item.members?.[0]?.user?.id)}
+      onPress={() => router.push(`/groups/${item.id}`)}
     >
       <Text style={styles.groupName}>{item.name}</Text>
       <Text style={styles.memberCount}>

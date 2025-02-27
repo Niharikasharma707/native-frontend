@@ -40,6 +40,13 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
         }}
       />
+      <Tabs.Screen
+        name="groups/[groupId]"
+        options={{
+          title: 'Group Detail',
+          tabBarButton: () => null, // Hide this screen from the tab bar
+        }}
+      />
     </Tabs>
   );
 }
