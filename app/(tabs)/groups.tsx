@@ -52,23 +52,6 @@ export default function GroupsScreen() {
     }
   });
 
-  // Leave group mutation
-  const leaveGroupMutation = useMutation({
-    mutationFn: (groupId: string) => leaveGroup(groupId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['groups'] });
-      Alert.alert('Success', 'Left group successfully');
-    }
-  });
-
-  // Delete group mutation
-  const deleteGroupMutation = useMutation({
-    mutationFn: (groupId: string) => deleteGroup(groupId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['groups'] });
-      Alert.alert('Success', 'Group deleted successfully');
-    }
-  });
 
   const handleCreateGroup = () => {
     if (!newGroupName.trim()) {

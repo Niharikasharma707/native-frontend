@@ -1,12 +1,19 @@
 // app/(tabs)/GroupDetailScreen.tsx
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal, Alert, ActivityIndicator } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { deleteGroup, leaveGroup, getGroupDetails } from '@/app/api/Group';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import { Ionicons } from '@expo/vector-icons';
-
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Modal,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteGroup, leaveGroup, getGroupDetails } from "@/app/api/Group";
+import { IconSymbol } from "@/components/ui/IconSymbol";
+import { Ionicons } from "@expo/vector-icons";
 
 const GroupDetailScreen = () => {
   const { groupId } = useLocalSearchParams();
@@ -16,19 +23,19 @@ const GroupDetailScreen = () => {
 
   // Fetch group details
   const { data: group, isLoading } = useQuery({
-    queryKey: ['group', groupId],
+    queryKey: ["group", groupId],
     queryFn: () => getGroupDetails(groupId as string),
     refetchOnMount: false,
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
   });
 
   // Delete group mutation
   const deleteGroupMutation = useMutation({
     mutationFn: (groupId: string) => deleteGroup(groupId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['groups'] });
+      queryClient.invalidateQueries({ queryKey: ["groups"] });
       router.back();
-      Alert.alert('Success', 'Group deleted successfully');
+      Alert.alert("Success", "Group deleted successfully");
     },
   });
 
@@ -36,9 +43,9 @@ const GroupDetailScreen = () => {
   const leaveGroupMutation = useMutation({
     mutationFn: (groupId: string) => leaveGroup(groupId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['groups'] });
+      queryClient.invalidateQueries({ queryKey: ["groups"] });
       router.back();
-      Alert.alert('Success', 'Left group successfully');
+      Alert.alert("Success", "Left group successfully");
     },
   });
 
@@ -62,12 +69,13 @@ const GroupDetailScreen = () => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>{group?.name}</Text>
-        <TouchableOpacity onPress={() =>{
-    console.log("Menu opened");
-    setIsMenuVisible(true);
-  }}>
- <Ionicons name="ellipsis-horizontal" size={24} color="#333" />
-         </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            setIsMenuVisible(true);
+          }}
+        >
+          <Ionicons name="ellipsis-horizontal" size={24} color="#333" />
+        </TouchableOpacity>
       </View>
 
       <Modal
@@ -121,46 +129,46 @@ const GroupDetailScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     paddingTop: 20,
   },
   centered: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: 20,
     marginBottom: 20,
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#333",
   },
   modalContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
   },
   modalContent: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     padding: 20,
     borderRadius: 12,
-    width: '80%',
+    width: "80%",
   },
   menuItem: {
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    borderBottomColor: "#ddd",
   },
   menuItemText: {
     fontSize: 16,
-    color: '#333',
+    color: "#333",
   },
 });
 
